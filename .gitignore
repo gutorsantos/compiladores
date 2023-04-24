@@ -1,4 +1,6 @@
 build
+compile_commands.json
+.cache
 
 lex.yy.c
 lex.yy.h
