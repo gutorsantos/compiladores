@@ -1,5 +1,7 @@
 %{
    // Definitions
+#include <stdio.h>
+#include "y.tab.h"
 %}
 %option yylineno
 
@@ -20,21 +22,13 @@ COMMENT_LINE       			                    (\/\/).*
 /** Expressoes regulares para definir os tokens **/
 
 %%
-{SPACE}             ;
-{COMMENT_BLOCK}     ;
-{COMMENT_LINE}      ;
-{INTEGER}           { yyval = atoi(yytext); return INTEGER; }
-{FLOAT}             { yyval = atof(yytext); return FLOAT; }
-{ID}                { return ID; }
-"("                 { return LPAREN; }
-")"                 { return RPAREN; }
-{                   { return LBRACKET; }
-}                   { return RBRACKET; }
-\[                  { return LBRACE; }
-\]                  { return RBRACE; }
-{OPERATOR}          { return OPERATOR; }
+
 %%
 
 int yywrap(void) {
    return 1;
+}
+
+void yyerror(const char *s) {
+  fprintf(stderr, "error: %s\n", s);
 }
