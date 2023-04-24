@@ -29,7 +29,7 @@ CFLAGS   := $(INC_FLAGS) -Wall -I./
 # -lfl: links flex
 LDFLAGS := -lfl
 
-LEX     := flex
+LEX     := flex --header-file='lex.yy.h'
 YACC    := yacc -d
 
 # The final build step.
@@ -37,12 +37,12 @@ $(BUILD_DIR)/$(TARGET_EXEC): $(OBJS) y.tab.c lex.yy.c
 	$(CC) $(OBJS) y.tab.c lex.yy.c -o $@ $(LDFLAGS)
 
 # Build step for C source
-$(BUILD_DIR)/%.c.o: %.c y.tab.h
+$(BUILD_DIR)/%.c.o: %.c y.tab.h lex.yy.h
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build step for flex
-lex.yy.c: src/lexer.l
+lex.yy.c lex.yy.h: src/lexer.l
 	$(LEX) src/lexer.l
 
 # Build step for yacc
@@ -54,9 +54,12 @@ y.tab.c y.tab.h: src/parser.y
 # 	mkdir -p $(dir $@)
 # 	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean
+.PHONY: clean run
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f lex.yy.c y.tab.c y.tab.h
+	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h
+
+run: $(BUILD_DIR)/$(TARGET_EXEC)
+	./$(BUILD_DIR)/$(TARGET_EXEC)
 
 -include $(DEPS)

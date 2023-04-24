@@ -1,11 +1,21 @@
 %{
 int yylex (void);
 void yyerror (char const *);
-int main();
 %}
 
 // definitions
-
+%token ID
+%token INTEGER
+%token FLOAT
+%token LPAREN
+%token RPAREN
+%token LBRACKET
+%token RBRACKET
+%token LBRACE
+%token RBRACE
+%token OPERATOR
+%token STRING
+%token SEMICOLON
 
 %%
 
