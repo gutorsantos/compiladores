@@ -1,7 +1,8 @@
+#include <stdio.h>
+
 #include "lex.yy.h"
 #include "test.h"
 #include "y.tab.h"
-#include <stdio.h>
 
 const char* stringify_token(int token_id) {
     switch (token_id) {
@@ -22,7 +23,7 @@ const char* stringify_token(int token_id) {
 }
 
 int main(int argc, char* argv[]) {
-    FILE *input_file = fopen(argv[1], "r");
+    FILE* input_file = fopen(argv[1], "r");
     yyin = input_file;
 
     int tok;
