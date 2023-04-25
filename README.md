@@ -3,5 +3,5 @@
 ## Uso
 ```bash
 make
-./build/compiler examples/simple01.c
+./build/compiler examples/1.simple
 ```
