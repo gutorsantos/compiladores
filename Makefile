@@ -1,7 +1,8 @@
 TARGET_EXEC := compiler
 
 BUILD_DIR := ./build
-SRC_DIRS := ./src
+GEN       := ./generated
+SRC_DIRS  := ./src
 
 # Find all the C and C++ files we want to compile
 # Note the single quotes around the * expressions. Make will incorrectly expand these otherwise.
@@ -16,38 +17,45 @@ OBJS := $(SRCS:%=$(BUILD_DIR)/%.o)
 DEPS := $(OBJS:.o=.d)
 
 # Every folder in ./src will need to be passed to GCC so that it can find header files
-INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_DIRS := $(shell find $(SRC_DIRS) -type d) ./ $(GEN)
 # Add a prefix to INC_DIRS. So moduleA would become -ImoduleA. GCC understands this -I flag
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 # The -MMD and -MP flags together generate Makefiles for us!
 # These files will have .d instead of .o as the output.
 # CPPFLAGS := $(INC_FLAGS) -MMD -MP -Wall -I./
-CFLAGS   := $(INC_FLAGS) -Wall -I./
+CFLAGS   := $(INC_FLAGS) -Wall
 
 # Linking flags
 # -lfl: links flex
 LDFLAGS := -lfl
 
-LEX     := flex --header-file='lex.yy.h'
+LEX     := flex
 YACC    := yacc -d
 
 # The final build step.
-$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS) y.tab.c lex.yy.c
-	$(CC) $(OBJS) y.tab.c lex.yy.c -o $@ $(LDFLAGS)
+$(BUILD_DIR)/$(TARGET_EXEC): $(OBJS) $(GEN)/y.tab.c $(GEN)/lex.yy.c
+	$(CC) $(OBJS) $(GEN)/y.tab.c $(GEN)/lex.yy.c -o $@ $(LDFLAGS)
 
 # Build step for C source
-$(BUILD_DIR)/%.c.o: %.c y.tab.h lex.yy.h
+$(BUILD_DIR)/%.c.o: %.c $(GEN)/y.tab.h $(GEN)/lex.yy.h $(GEN)/token_str.h
 	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Build step for flex
-lex.yy.c lex.yy.h: src/lexer.l
-	$(LEX) src/lexer.l
+$(GEN)/lex.yy.c $(GEN)/lex.yy.h: src/lexer.l
+	mkdir -p $(dir $@)
+	$(LEX) -o $(GEN)/lex.yy.c --header-file=$(GEN)/lex.yy.h $<
 
 # Build step for yacc
-y.tab.c y.tab.h: src/parser.y
-	$(YACC) src/parser.y
+$(GEN)/y.tab.c $(GEN)/y.tab.h: src/parser.y
+	mkdir -p $(dir $@)
+	$(YACC) -o $(GEN)/y.tab.c -H $<
+
+# Build step for token_str
+$(GEN)/token_str.h: src/token_str.py
+	mkdir -p $(dir $@)
+	python3 $< > $@
 
 # # Build step for C++ source
 # $(BUILD_DIR)/%.cpp.o: %.cpp
@@ -57,7 +65,7 @@ y.tab.c y.tab.h: src/parser.y
 .PHONY: clean run
 clean:
 	rm -rf $(BUILD_DIR)
-	rm -f lex.yy.c lex.yy.h y.tab.c y.tab.h
+	rm -rf $(GEN)
 
 run: $(BUILD_DIR)/$(TARGET_EXEC)
 	./$(BUILD_DIR)/$(TARGET_EXEC)

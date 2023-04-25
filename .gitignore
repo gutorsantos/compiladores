@@ -1,8 +1,4 @@
-build
+build/
+.cache/
+generated/
 compile_commands.json
-.cache
-
-lex.yy.c
-lex.yy.h
-y.tab.c
-y.tab.h
