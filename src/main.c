@@ -11,7 +11,7 @@ int main(int argc, char* argv[]) {
 
     int token;
     while ((token = yylex()) != YYEOF) {
-        printf("%s <%s>\n", token_str(token), yytext);
+        printf("%s '%s'\n", token_str(token), yytext);
     }
 
     return 0;

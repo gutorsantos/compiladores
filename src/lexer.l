@@ -25,31 +25,26 @@ COMMENT_LINE       			                    (\/\/).*
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
-{INTEGER}           { yylval = atoi(yytext); return INTEGER; }
-{FLOAT}             { yylval = atof(yytext); return FLOAT; }
-{ID}                { return ID; }
-{STRING}            { return STRING; }
-"("                 { return LPAREN; }
-")"                 { return RPAREN; }
-"{"                 { return LBRACKET; }
-"}"                 { return RBRACKET; }
-"["                 { return LBRACE; }
-"]"                 { return RBRACE; }
-{OPERATOR}          { return OPERATOR; }
-";"                 { return SEMICOLON; }
-
 do                  { return DO; }
-else                  { return ELSE; }
-end                  { return END; }
-fi                   { return FI; }
+else                { return ELSE; }
+end                 { return END; }
+fi                  { return FI; }
 if                  { return IF; }
 in                  { return IN; }
-let                  { return LET; }
-read                  { return READ; }
-skip                  { return SKIP; }
-then                  { return THEN; }
-while                  { return WHILE; }
-write                  { return WRITE; }
+integer             { return INTEGER; }
+let                 { return LET; }
+read                { return READ; }
+skip                { return SKIP; }
+then                { return THEN; }
+while               { return WHILE; }
+write               { return WRITE; }
+":="                { return WALRUS; }
+{ID}                { return ID; }
+{STRING}            { return STRING; }
+{INTEGER}           { yylval = atoi(yytext); return INTEGER_VAL; }
+{FLOAT}             { yylval = atof(yytext); return FLOAT_VAL; }
+
+.                   { return (yytext[0]); }
 %%
 
 int yywrap(void) {

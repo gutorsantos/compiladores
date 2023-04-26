@@ -8,8 +8,9 @@ def generate_tokens():
         for line in f:
             prefix = "%token "
             if line.startswith(prefix):
-                token = line[len(prefix):].strip()
-                yield token
+                tokens = line[len(prefix):].strip()
+                for token in tokens.split(' '):
+                    yield token
 
 print("""\
 ////////////////////////////////////////////////////////////////////////////////
@@ -31,7 +32,7 @@ for token in generate_tokens():
     print(f"        case {token}: return \"{token}\";")
 
 print("""\
-        default: return \"<UNKNOWN>\";
+        default: return \"<CHAR>\";
     }
 }
 
