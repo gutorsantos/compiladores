@@ -37,6 +37,19 @@ COMMENT_LINE       			                    (\/\/).*
 "]"                 { return RBRACE; }
 {OPERATOR}          { return OPERATOR; }
 ";"                 { return SEMICOLON; }
+
+do                  { return DO; }
+else                  { return ELSE; }
+end                  { return END; }
+fi                   { return FI; }
+if                  { return IF; }
+in                  { return IN; }
+let                  { return LET; }
+read                  { return READ; }
+skip                  { return SKIP; }
+then                  { return THEN; }
+while                  { return WHILE; }
+write                  { return WRITE; }
 %%
 
 int yywrap(void) {
