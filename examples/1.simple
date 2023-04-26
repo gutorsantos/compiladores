@@ -1,9 +1,9 @@
 let
-    integer x, y, z, alpha;
+    integer x, y, z, Alpha.
 in
     x := 10;
     y := 23;
     read alpha;
-    z := x + y * alpha;
+    z := x + y * Alpha;
     write z;
 end

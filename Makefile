@@ -53,7 +53,7 @@ $(GEN)/y.tab.c $(GEN)/y.tab.h: src/parser.y
 	$(YACC) -o $(GEN)/y.tab.c -H $<
 
 # Build step for token_str
-$(GEN)/token_str.h: src/token_str.py
+$(GEN)/token_str.h: src/token_str.py src/parser.y
 	mkdir -p $(dir $@)
 	python3 $< > $@
 
