@@ -16,6 +16,18 @@ void yyerror (char const *);
 %token OPERATOR
 %token STRING
 %token SEMICOLON
+%token DO
+%token ELSE
+%token END
+%toknen FI
+%token IF
+%token IN
+%token LET
+%token READ
+%ẗoken SKIP
+%token THEN
+%token WHILE
+%token WRITE
 
 %%
 
