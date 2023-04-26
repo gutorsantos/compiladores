@@ -1,9 +1,9 @@
-LET
+let
     integer x, y, z, alpha;
-IN
+in
     x := 1;
     y := 2;
     read alpha;
     z := x + y * alpha;
     write z;
-END
+end

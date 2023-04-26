@@ -1,0 +1,13 @@
+/* Comentário */
+
+let
+    integer x.
+in
+    skip;
+    read x;
+    skip;
+    x := x + 1;
+    skip;
+    write x;
+end
+

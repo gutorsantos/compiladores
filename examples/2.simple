@@ -1,0 +1,22 @@
+// Calcula o n-ésimo número de fibonacci
+
+let
+    integer n, a, b, temp.
+in
+    a := 0;
+    b := 1;
+
+    read n;
+
+    if n < 0 then
+        write "???";
+    fi;
+
+    while n > 0 do
+        temp := a + b;
+        a := b;
+        b := temp;
+    end;
+
+    write a;
+end
