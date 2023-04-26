@@ -4,9 +4,10 @@ void yyerror (char const *);
 %}
 
 // definitions
-%token ID INTEGER_VAL FLOAT_VAL WALRUS OPERATOR
-%token STRING DO ELSE END FI IF IN INTEGER LET
-%token READ SKIP THEN WHILE WRITE
+%token ID INTEGER_VAL FLOAT_VAL
+%token WALRUS STRING
+%token DO ELSE FI IF IN LET WHILE THEN INTEGER END
+%token READ WRITE SKIP
 %%
 
 one : '1'
