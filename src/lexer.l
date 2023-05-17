@@ -27,6 +27,7 @@ COMMENT_LINE       			                        (\/\/).*
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
+INTEGER             { yylval.intval = atoi(yytext); return NUMBER; }
 do                  { return DO; }
 else                { return ELSE; }
 end                 { return END; }

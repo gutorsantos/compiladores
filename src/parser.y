@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
-#include "../src/parser.h"
+#include "../src/the_parser.h"
 #include "../src/scanner.h"
 #include "../src/symbol_table.h"
 
@@ -25,14 +25,13 @@ extern int yylineno;
 %token DO
 %token ELSE
 %token END
-%token FLOAT
 %token <id> IDENTIFIER
 %token <lbls> IF WHILE
 %token IN 
-%token INTEGER 
 %token LET 
-%token <intval> INTEGER
-%token <floatval> FLOAT
+%token INTEGER 
+%token FLOAT
+%token <intval> NUMBER
 %token READ 
 %token READ_FT
 %token SKIP
@@ -82,7 +81,7 @@ command:        SKIP
                                                                  back_patch($1->for_jmp_false, JMP_FALSE, gen_label());}
                 ;
 
-exp:            INTEGER                                         {gen_code(LD_INT, $1);}
+exp:            NUMBER                                          {gen_code(LD_INT, $1);}
                 | IDENTIFIER                                    {context_check(LD_VAR, $1);}
                 | exp exp '<'                                   {gen_code(LT, 0);}
                 | exp exp '='                                   {gen_code(EQ, 0);}

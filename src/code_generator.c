@@ -26,5 +26,5 @@ void back_patch(int addr, enum code_ops operation, int arg){
 }
 void print_code(){
     for(int i = 0; i < code_offset; i++)
-        printf("%3ld: %-10s%4ld\n", i, op_name[(int) code[i].op], code[i].arg);
+        printf("%3d: %-10s%4d\n", i, op_name[(int) code[i].op], code[i].arg);
 }
