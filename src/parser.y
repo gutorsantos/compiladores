@@ -32,6 +32,7 @@ extern int yylineno;
 %token INTEGER 
 %token FLOAT
 %token <intval> NUMBER
+%token <floatval> NUMBER_FLOAT
 %token READ 
 %token READ_FT
 %token SKIP

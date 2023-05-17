@@ -27,7 +27,7 @@ COMMENT_LINE       			                        (\/\/).*
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
-INTEGER             { yylval.intval = atoi(yytext); return NUMBER; }
+{INTEGER}           { yylval.intval = atoi(yytext); return NUMBER; }
 do                  { return DO; }
 else                { return ELSE; }
 end                 { return END; }
@@ -40,10 +40,10 @@ skip                { return SKIP; }
 then                { return THEN; }
 while               { return WHILE; }
 write               { return WRITE; }
+{ID}                { yylval.id = (char *) strdup(yytext); return IDENTIFIER; }
 .                   { return (yytext[0]); }
 %%
 
-// {ID}                { return yylval.id = (char *) strdup(yytext); return IDENTIFIER; }
 int yywrap(void) {
    return 1;
 }
