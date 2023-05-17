@@ -1,6 +1,7 @@
-#ifndef SCANNER_H
-#define SCANNER_H
+#ifndef SYMBOL_TABLE_H
+#define SYMBOL_TABLE_H
 
+#include <code_generator.h>
 typedef struct {
     char *name;
     int offset;

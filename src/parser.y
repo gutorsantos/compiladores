@@ -5,7 +5,6 @@
 #include "../src/parser.h"
 #include "../src/scanner.h"
 #include "../src/symbol_table.h"
-#include "../src/utils.h"
 
 #define YYDEBUG 1
 
@@ -14,10 +13,10 @@ int yylex(void);
 extern int yylineno;
 %}
 
-%union {            // Acrescentar tipos aqui
-    int intval;     // Inteiro
-    float floatval; // Float 
-    char* id;       // Identificadores
+%union semrec{
+    int intval;
+    float floatval;
+    char* id;
     struct lbs* lbls;
 } 
 
@@ -92,8 +91,8 @@ command:        SKIP
                                                                  back_patch($1->for_jmp_false, JMP_FALSE, (struct stack_t) {.intval = gen_label()});}
                 ;
 
-exp:            NUMBER_INTEGER                                  {gen_code(LD_INT, (struct stack_t) {.intval = $1, .type = INTVAL});}
-                | NUMBER_FLOAT                                  {gen_code(LD_FLOAT, (struct stack_t) {.floatval = $1, .type = FLOATVAL});}
+exp:            INTEGER                                         {gen_code(LD_INT, (struct stack_t) {.intval = $1, .type = INTVAL});}
+                | FLOAT                                         {gen_code(LD_FLOAT, (struct stack_t) {.floatval = $1, .type = FLOATVAL});}
                 | IDENTIFIER                                    {context_check(LD_VAR, $1);}
                 | exp exp '<'                                   {gen_code(LT, (struct stack_t) {.intval = 0});}
                 | exp exp '='                                   {gen_code(EQ, (struct stack_t) {.intval = 0});}
