@@ -23,11 +23,11 @@ COMMENT_LINE       			                        (\/\/).*
 
 /** {DIGIT}+           { yylval.intval = atoi(yytext); return NUMBER; }*/
 %%
-":="                { return ASSGNOP; }
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
 {INTEGER}           { yylval.intval = atoi(yytext); return NUMBER; }
+":="                { return ASSGNOP; }
 do                  { return DO; }
 else                { return ELSE; }
 end                 { return END; }

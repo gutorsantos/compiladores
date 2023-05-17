@@ -54,7 +54,7 @@ program:        LET
                 ;
 
 declarations:   /* empty */                                     {install("0");}
-                | INTEGER id_seq IDENTIFIER '.'    {install($3);}
+                | INTEGER id_seq IDENTIFIER '.'                 {install($3);}
                 ;
 
 id_seq:         /* empty */
@@ -84,14 +84,14 @@ command:        SKIP
 
 exp:            NUMBER                                          {gen_code(LD_INT, $1);}
                 | IDENTIFIER                                    {context_check(LD_VAR, $1);}
-                | exp exp '<'                                   {gen_code(LT, 0);}
-                | exp exp '='                                   {gen_code(EQ, 0);}
-                | exp exp '>'                                   {gen_code(GT, 0);}
-                | exp exp '+'                                   {gen_code(ADD, 0);}
-                | exp exp '-'                                   {gen_code(SUB, 0);}
-                | exp exp '*'                                   {gen_code(MULT, 0);}
-                | exp exp '/'                                   {gen_code(DIV, 0);}
-                | exp exp '^'                                   {gen_code(PWR, 0);}
+                | exp '<' exp                                   {gen_code(LT, 0);}
+                | exp '=' exp                                   {gen_code(EQ, 0);}
+                | exp '>' exp                                   {gen_code(GT, 0);}
+                | exp '+' exp                                   {gen_code(ADD, 0);}
+                | exp '-' exp                                   {gen_code(SUB, 0);}
+                | exp '*' exp                                   {gen_code(MULT, 0);}
+                | exp '/' exp                                   {gen_code(DIV, 0);}
+                | exp '^' exp                                   {gen_code(PWR, 0);}
                 | '(' exp ')'
                 ;
 

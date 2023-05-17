@@ -3,7 +3,7 @@ let
 in
     x := 10;
     y := 23;
-    read alpha;
+    read Alpha;
     z := x + y * Alpha;
     write z;
 end
