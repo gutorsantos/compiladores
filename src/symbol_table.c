@@ -21,4 +21,5 @@ symrec * getsym(char *symbol_name) {
     return 0;
 }
 
-symrec *sym_table = (symrec *)0;
+symrec *identifier;
+static symrec *sym_table = (symrec *)0;

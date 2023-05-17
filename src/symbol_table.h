@@ -3,10 +3,12 @@
 
 typedef struct {
     char *name;
+    int offset;
     struct symrec *next;
 } symrec;
 
-extern struct symrec sym_table;
+extern symrec *identifier;
+extern symrec sym_table;
 
 symrec * putsym(char *symbol_name);
 symrec * getsym(char *symbol_name);
