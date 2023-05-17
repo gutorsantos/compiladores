@@ -1,6 +1,9 @@
 let
     integer x.
 in
+    x := 1;
+    y := 2;
+    // z := ;
 end
 
 

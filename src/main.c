@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <the_parser.h>
- #include "../generated/y.tab.h"
 #include <token_str.h>
+
+#include "../generated/y.tab.h"
 
 int main(int argc, char* argv[]) {
     FILE* input_file = fopen(argv[1], "r");
@@ -14,11 +15,10 @@ int main(int argc, char* argv[]) {
     // }
 
     printf("-----------------------------------\n");
-    yyparse ();
-    printf ( "Parse Completed\n" );
-    if ( errors == 0 ) {
-        print_code ();
-        fetch_execute_cycle();
+    yyparse();
+    printf("Parse Completed\n");
+    if (errors == 0) {
+        print_code();
     }
 
     return 0;
