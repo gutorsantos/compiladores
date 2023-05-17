@@ -48,20 +48,13 @@ extern int yylineno;
 
 program:        LET 
                     declarations
-                IN                                              {gen_code(DATA, (struct stack_t) {.intval = sym_table->offset});}
+                IN                                              {gen_code(DATA, data_location()-1);}
                     commands
-                END                                             {gen_code(HALT, (struct stack_t) {.intval =  0}); 
-                                                                 fetch_execute_cycle();
-                                                                 clear_table(sym_table);
-                                                                 clear_label_list(lbs_list);
-                                                                 clear_yyval_list(str_list);
-                                                                 report_errors();
-                                                                 YYACCEPT;}
+                END                                             {gen_code(HALT, 0); YYACCEPT;}
                 ;
 
 declarations:   /* empty */                                     {install("0");}
-                | declarations INTEGER id_seq IDENTIFIER ';'    {install($4);}
-                | declarations FLOAT id_seq IDENTIFIER ';'      {install($4);}
+                | INTEGER id_seq IDENTIFIER '.'    {install($3);}
                 ;
 
 id_seq:         /* empty */
@@ -74,34 +67,31 @@ commands:       /* empty */
 
 command:        SKIP
                 | READ IDENTIFIER                               {context_check(READ_INT, $2);}
-                | READ_FT IDENTIFIER                            {context_check(READ_FLOAT, $2);}
-                | WRITE exp                                     {gen_code(WRITE_INT, (struct stack_t) {.intval = 0});}
-                | WRITE_FT exp                                  {gen_code(WRITE_FLOAT, (struct stack_t) {.floatval = 0});}
+                | WRITE exp                                     {gen_code(WRITE_INT, 0);}
                 | IDENTIFIER ASSGNOP exp                        {context_check(STORE, $1);}
-                | IF exp                                        {$1 = (struct lbs *) create_label(); $1->for_jmp_false = reserve_loc();}
+                | IF exp                                        {$1 = (lbs *) newlbl(); $1->for_jmp_false = reserve_loc();}
                     THEN commands                               {$1->for_goto = reserve_loc();}
-                  ELSE                                          {back_patch($1->for_jmp_false, JMP_FALSE, (struct stack_t) {.intval = gen_label()});}
+                  ELSE                                          {back_patch($1->for_jmp_false, JMP_FALSE, gen_label());}
                     commands
-                  END                                           {back_patch($1->for_goto, GOTO, (struct stack_t) {.intval = gen_label()});}
-                | WHILE                                         {$1 = (struct lbs *) create_label(); $1->for_goto = gen_label();}
+                  END                                           {back_patch($1->for_goto, GOTO, gen_label());}
+                | WHILE                                         {$1 = (lbs *) newlbl(); $1->for_goto = gen_label();}
                     exp                                         {$1->for_jmp_false = reserve_loc();}
                   DO
                     commands
-                  END                                           {gen_code(GOTO, (struct stack_t) {.intval = $1->for_goto}); 
-                                                                 back_patch($1->for_jmp_false, JMP_FALSE, (struct stack_t) {.intval = gen_label()});}
+                  END                                           {gen_code(GOTO, $1->for_goto); 
+                                                                 back_patch($1->for_jmp_false, JMP_FALSE, gen_label());}
                 ;
 
-exp:            INTEGER                                         {gen_code(LD_INT, (struct stack_t) {.intval = $1, .type = INTVAL});}
-                | FLOAT                                         {gen_code(LD_FLOAT, (struct stack_t) {.floatval = $1, .type = FLOATVAL});}
+exp:            INTEGER                                         {gen_code(LD_INT, $1);}
                 | IDENTIFIER                                    {context_check(LD_VAR, $1);}
-                | exp exp '<'                                   {gen_code(LT, (struct stack_t) {.intval = 0});}
-                | exp exp '='                                   {gen_code(EQ, (struct stack_t) {.intval = 0});}
-                | exp exp '>'                                   {gen_code(GT, (struct stack_t) {.intval = 0});}
-                | exp exp '+'                                   {gen_code(ADD, (struct stack_t) {.intval = 0});}
-                | exp exp '-'                                   {gen_code(SUB, (struct stack_t) {.intval = 0});}
-                | exp exp '*'                                   {gen_code(MULT, (struct stack_t) {.intval = 0});}
-                | exp exp '/'                                   {gen_code(DIV, (struct stack_t) {.intval = 0});}
-                | exp exp '^'                                   {gen_code(PWR, (struct stack_t) {.intval = 0});}
+                | exp exp '<'                                   {gen_code(LT, 0);}
+                | exp exp '='                                   {gen_code(EQ, 0);}
+                | exp exp '>'                                   {gen_code(GT, 0);}
+                | exp exp '+'                                   {gen_code(ADD, 0);}
+                | exp exp '-'                                   {gen_code(SUB, 0);}
+                | exp exp '*'                                   {gen_code(MULT, 0);}
+                | exp exp '/'                                   {gen_code(DIV, 0);}
+                | exp exp '^'                                   {gen_code(PWR, 0);}
                 | '(' exp ')'
                 ;
 

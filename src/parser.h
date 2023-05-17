@@ -9,7 +9,7 @@ extern unsigned int errors;
 
 // static inline void report_errors();
 
-typedef struct {
+typedef struct lbs{
     int for_goto;
     int for_jmp_false;
     struct lbs *next;

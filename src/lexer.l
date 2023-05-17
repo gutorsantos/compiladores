@@ -1,7 +1,7 @@
 %{
 #include <string.h>
 #include <stdio.h>
-#include "y.tab.h"
+#include "../generated/y.tab.h"
 %}
 
 %option yylineno
@@ -12,23 +12,24 @@ SIGN                                            [+-]
 ID                                              [a-zA-Z][a-zA-Z0-9_-]*
 INTEGER                                         {SIGN}?{DIGIT}+
 FLOAT                                           {SIGN}?{DIGIT}*[.]{DIGIT}*
-SPACE  		                                    [ \t\n]+
+SPACE  		                                      [ \t\n]+
 STRING                                          \"[^\"]*\"
 
 OPERATOR                                        [+-/*%&|^<>!]|==|!=|>=|<=|&&|\|\|
-COMMENT_BLOCK 				                    [/][*]([^*]|([*]+[^*/]))*[*]+[/]
-COMMENT_LINE       			                    (\/\/).*
+COMMENT_BLOCK 				                          [/][*]([^*]|([*]+[^*/]))*[*]+[/]
+COMMENT_LINE       			                        (\/\/).*
 
 /** Expressoes regulares para definir os tokens **/
 
+/** {DIGIT}+           { yylval.intval = atoi(yytext); return NUMBER; }*/
 %%
+":="                { return ASSGNOP; }
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
 do                  { return DO; }
 else                { return ELSE; }
 end                 { return END; }
-fi                  { return FI; }
 if                  { return IF; }
 in                  { return IN; }
 integer             { return INTEGER; }
@@ -38,15 +39,10 @@ skip                { return SKIP; }
 then                { return THEN; }
 while               { return WHILE; }
 write               { return WRITE; }
-":="                { return WALRUS; }
-{ID}                { return ID; }
-{STRING}            { return STRING; }
-{INTEGER}           { yylval = atoi(yytext); return INTEGER_VAL; }
-{FLOAT}             { yylval = atof(yytext); return FLOAT_VAL; }
-
 .                   { return (yytext[0]); }
 %%
 
+// {ID}                { return yylval.id = (char *) strdup(yytext); return IDENTIFIER; }
 int yywrap(void) {
    return 1;
 }
