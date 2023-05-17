@@ -47,6 +47,3 @@ int yywrap(void) {
    return 1;
 }
 
-void yyerror(const char *s) {
-  fprintf(stderr, "error: %s\n", s);
-}
