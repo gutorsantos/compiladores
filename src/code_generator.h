@@ -3,7 +3,7 @@
 
 #include "stack_machine.h"
 
-extern int data_offeset;
+extern int data_offset;
 extern int code_offset;
 
 int data_location();
