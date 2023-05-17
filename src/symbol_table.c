@@ -1,10 +1,10 @@
-#include <symbol_table.h>
+#include "symbol_table.h"
 
 /** putsym to put an identifier into the table */
 symrec * putsym(char *symbol_name) {
     symrec *node;
-    node = (symrec *) malloc (sizeof(symrec));
-    node->name = (char*) malloc(strlen(symbol_name)+1);
+    node = (symrec *) malloc(sizeof(symrec));
+    node->name = (char *) malloc(strlen(symbol_name)+1);
     strcpy(node->name, symbol_name);
     node->next = (symrec *) sym_table;
     sym_table = node;
@@ -22,4 +22,4 @@ symrec * getsym(char *symbol_name) {
 }
 
 symrec *identifier;
-static symrec *sym_table = (symrec *)0;
+symrec *sym_table = (symrec *)0;

@@ -4,7 +4,7 @@
 #include "symbol_table.h"
 #include <stdio.h>
 
-// extern FILE* yyin;
+extern FILE* yyin;
 extern unsigned int errors;
 
 // static inline void report_errors();
@@ -17,7 +17,7 @@ typedef struct {
 
 extern lbs *lbs_list;
 
-static lbs* newlbl();
+lbs* newlbl();
 void install(char* sym_name);
 void context_check(enum code_ops operation, char* sym_name);
 int yyparse();

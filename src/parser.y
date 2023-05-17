@@ -108,5 +108,5 @@ exp:            INTEGER                                         {gen_code(LD_INT
 %%
 
 void yyerror(char *s) {
-    printf(RED "Problema com a analise sintatica na linha %d!\n" RESET, --yylineno);
+    printf("Problema com a analise sintatica na linha %d!\n", --yylineno);
 }

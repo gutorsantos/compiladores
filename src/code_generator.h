@@ -1,7 +1,7 @@
 #ifndef CODE_GENERATOR_H
 #define CODE_GENERATOR_H
 
-#include <stack_machine.h>
+#include "stack_machine.h"
 
 extern int data_offeset;
 extern int code_offset;

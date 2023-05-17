@@ -1,4 +1,4 @@
-#include <stack_machine.h>
+#include "stack_machine.h"
 
 char *op_name[] = {"halt", "store", "jmp_false", "goto", "data", "ld_int", "ld_var", "in_int", "out_int", "lt", "eq", "gt", "add", "sub", "mult", "div", "pwr" };
 
