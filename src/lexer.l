@@ -11,7 +11,7 @@ SIGN                                            [+-]
 
 ID                                              [a-zA-Z][a-zA-Z0-9_-]*
 INTEGER                                         {SIGN}?{DIGIT}+
-FLOAT                                           {SIGN}?{DIGIT}+[.]{DIGIT}*
+FLOAT                                           {SIGN}?{DIGIT}*[.]{DIGIT}*
 SPACE  		                                    [ \t\n]+
 STRING                                          \"[^\"]*\"
 
