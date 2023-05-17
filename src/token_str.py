@@ -10,7 +10,8 @@ def generate_tokens():
             if line.startswith(prefix):
                 tokens = line[len(prefix):].strip()
                 for token in tokens.split(' '):
-                    yield token
+                    if token != "" and token[0] != "<":
+                        yield token
 
 print("""\
 ////////////////////////////////////////////////////////////////////////////////
