@@ -21,7 +21,6 @@ COMMENT_LINE       			                        (\/\/).*
 
 /** Expressoes regulares para definir os tokens **/
 
-/** {DIGIT}+           { yylval.intval = atoi(yytext); return NUMBER; }*/
 %%
 {SPACE}             ;
 {COMMENT_BLOCK}     ;

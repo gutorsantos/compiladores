@@ -17,9 +17,6 @@ int main(int argc, char* argv[]) {
     printf("-----------------------------------\n");
     yyparse();
     printf("Parse Completed\n");
-    if (errors == 0) {
-        print_code();
-    }
 
     return 0;
 }

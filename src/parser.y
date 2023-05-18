@@ -2,9 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../src/the_parser.h"
-#include "../src/scanner.h"
-#include "../src/symbol_table.h"
 
 #define YYDEBUG 1
 
@@ -21,24 +18,22 @@ extern int yylineno;
 }
 
 %start program
-%token <id> ASSGNOP
+%token ASSGNOP
 %token DO
 %token ELSE
 %token END
-%token <id> IDENTIFIER
-%token <lbls> IF WHILE
+%token IDENTIFIER
+%token IF WHILE
 %token IN
 %token LET
 %token INTEGER
 %token FLOAT
-%token <intval> NUMBER
-%token <floatval> NUMBER_FLOAT
+%token NUMBER
+%token NUMBER_FLOAT
 %token READ
-%token READ_FT
 %token SKIP
 %token THEN
 %token WRITE
-%token WRITE_FT
 
 %left '-' '+'
 %left '*' '/'
@@ -79,7 +74,6 @@ command:        SKIP
                   DO
                     commands
                   END
-
                 ;
 
 exp:            NUMBER
