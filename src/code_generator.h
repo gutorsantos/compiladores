@@ -9,6 +9,7 @@ struct instruction {
     enum code_ops op;
     int arg;
 };
+struct instruction code[999];
 
 extern int data_offset;
 extern int code_offset;
