@@ -15,7 +15,6 @@ extern int yylineno;
 
 %union semrec{
     int intval;
-    float floatval;
     char* id;
     struct lbs* lbls;
 } 
@@ -98,5 +97,5 @@ exp:            NUMBER                                          {gen_code(LD_INT
 %%
 
 void yyerror(char *s) {
-    printf("Problema com a analise sintatica na linha %d!\n", --yylineno);
+    printf("Error: %d!\n", --yylineno);
 }
