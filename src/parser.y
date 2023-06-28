@@ -1,11 +1,8 @@
 %{
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> 
-#include "../src/ast.h"
-#include "../src/the_parser.h"
-#include "../src/scanner.h"
-#include "../src/symbol_table.h"
+#include <string.h>
+#include "../src/codegen/ast.h"
 
 #define YYDEBUG 1
 
@@ -15,8 +12,7 @@ extern int yylineno;
 %}
 
 %union semrec{
-    struct ASTNode* ast;
-    struct lbs* lbls;
+    struct ASTNode* node;
 } 
 
 %start program
@@ -39,8 +35,6 @@ extern int yylineno;
 %token THEN
 %token WRITE
 %token WRITE_FT
-%token DECLARATION
-%token COMMAND
 
 %left '-' '+'
 %left '*' '/'
@@ -52,15 +46,15 @@ program:        LET
                     declarations
                 IN                                              {}
                     commands
-                END                                             {gen_code(HALT, 0); YYACCEPT;}
+                END                                             {}
                 ;
 
-declarations:   /* empty */                                     {install("0");}
-                | INTEGER id_seq IDENTIFIER '.'                 {install($3);}
+declarations:   /* empty */                                     {}
+                | INTEGER id_seq IDENTIFIER '.'                 {}
                 ;
 
 id_seq:         /* empty */
-                | id_seq IDENTIFIER ','                         {install($2);}
+                | id_seq IDENTIFIER ','                         {}
                 ;
 
 commands:       /* empty */
@@ -68,32 +62,31 @@ commands:       /* empty */
                 ;
 
 command:        SKIP
-                | READ IDENTIFIER                               {context_check(READ_INT, $2);}
-                | WRITE exp                                     {gen_code(WRITE_INT, 0);}
-                | IDENTIFIER ASSGNOP exp                        {context_check(STORE, $1);}
-                | IF exp                                        {$1 = (lbs *) newlbl(); $1->for_jmp_false = reserve_loc();}
-                    THEN commands                               {$1->for_goto = reserve_loc();}
-                  ELSE                                          {back_patch($1->for_jmp_false, JMP_FALSE, gen_label());}
+                | READ IDENTIFIER                               {}
+                | WRITE exp                                     {}
+                | IDENTIFIER ASSGNOP exp                        {}
+                | IF exp                                        {}
+                    THEN commands                               {}
+                  ELSE                                          {}
                     commands
-                  END                                           {back_patch($1->for_goto, GOTO, gen_label());}
-                | WHILE                                         {$1 = (lbs *) newlbl(); $1->for_goto = gen_label();}
-                    exp                                         {$1->for_jmp_false = reserve_loc();}
+                  END                                           {}
+                | WHILE                                         {}
+                    exp                                         {}
                   DO
                     commands
-                  END                                           {gen_code(GOTO, $1->for_goto); 
-                                                                 back_patch($1->for_jmp_false, JMP_FALSE, gen_label());}
+                  END                                           {}
                 ;
 
-exp:            NUMBER                                          {gen_code(LD_INT, $1);}
-                | IDENTIFIER                                    {context_check(LD_VAR, $1);}
-                | exp '<' exp                                   {gen_code(LT, 0);}
-                | exp '=' exp                                   {gen_code(EQ, 0);}
-                | exp '>' exp                                   {gen_code(GT, 0);}
-                | exp '+' exp                                   {gen_code(ADD, 0);}
-                | exp '-' exp                                   {gen_code(SUB, 0);}
-                | exp '*' exp                                   {gen_code(MULT, 0);}
-                | exp '/' exp                                   {gen_code(DIV, 0);}
-                | exp '^' exp                                   {gen_code(PWR, 0);}
+exp:            NUMBER                                          {}
+                | IDENTIFIER                                    {}
+                | exp '<' exp                                   {}
+                | exp '=' exp                                   {}
+                | exp '>' exp                                   {}
+                | exp '+' exp                                   {}
+                | exp '-' exp                                   {}
+                | exp '*' exp                                   {}
+                | exp '/' exp                                   {}
+                | exp '^' exp                                   {}
                 | '(' exp ')'
                 ;
 

@@ -30,7 +30,7 @@ typedef struct ASTNode {
     struct ASTNode* right; // Filho direito
 } ASTNode;
 
-ASTNode* create_node(int type, void* value);
+ASTNode* create_node(int type, char* value);
 void free_ast(ASTNode* node);
 void print_indent(int indent);
 void print_ast(ASTNode* node, int indent);
