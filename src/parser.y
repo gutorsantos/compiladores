@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h> 
+#include "../src/ast.h"
 #include "../src/the_parser.h"
 #include "../src/scanner.h"
 #include "../src/symbol_table.h"
@@ -14,8 +15,7 @@ extern int yylineno;
 %}
 
 %union semrec{
-    int intval;
-    char* id;
+    struct ASTNode* ast;
     struct lbs* lbls;
 } 
 
@@ -32,12 +32,15 @@ extern int yylineno;
 %token FLOAT
 %token <intval> NUMBER
 %token <floatval> NUMBER_FLOAT
+%token <id> STRING
 %token READ 
 %token READ_FT
 %token SKIP
 %token THEN
 %token WRITE
 %token WRITE_FT
+%token DECLARATION
+%token COMMAND
 
 %left '-' '+'
 %left '*' '/'
@@ -47,7 +50,7 @@ extern int yylineno;
 
 program:        LET 
                     declarations
-                IN                                              {gen_code(DATA, data_location()-1);}
+                IN                                              {}
                     commands
                 END                                             {gen_code(HALT, 0); YYACCEPT;}
                 ;

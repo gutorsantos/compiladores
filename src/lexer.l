@@ -27,6 +27,7 @@ COMMENT_LINE       			                        (\/\/).*
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
 {INTEGER}           { yylval.intval = atoi(yytext); return NUMBER; }
+{FLOAT}             { yylval.floatval = atof(yytext); return NUMBER_FLOAT; }
 ":="                { return ASSGNOP; }
 do                  { return DO; }
 else                { return ELSE; }
@@ -41,6 +42,7 @@ then                { return THEN; }
 while               { return WHILE; }
 write               { return WRITE; }
 {ID}                { yylval.id = (char *) strdup(yytext); return IDENTIFIER; }
+{STRING}            { yylval.id = (char *) strdup(yytext); return STRING; }
 .                   { return (yytext[0]); }
 %%
 

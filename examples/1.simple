@@ -1,9 +1,0 @@
-let
-    integer x, y, z, Alpha.
-in
-    x := 10;
-    y := 23;
-    read Alpha;
-    z := x + y * Alpha;
-    write z;
-end
