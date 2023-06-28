@@ -55,11 +55,11 @@ program:        LET
                     declarations
                 IN                                              {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2;}
                     commands
-                END                                             {root->right = $4; $$ = root;}
+                END                                             {$$ = root;}
                 ;
 
-declarations:   /* empty */                                     {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {});}
-                | INTEGER id_seq IDENTIFIER '.'                 {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {});}
+declarations:   /* empty */                                     {$$ = NULL;}
+                | INTEGER id_seq IDENTIFIER '.'                 {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {}); install($3);}
                 ;
 
 id_seq:         /* empty */                                     {$$ = NULL;}
