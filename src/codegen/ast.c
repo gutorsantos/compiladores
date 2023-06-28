@@ -117,5 +117,9 @@ void print_ast(ASTNode* node, int indent) {
             print_indent(indent);
             printf("Number: %d\n", node->value.intval);
             break;
+        case AST_IDENTIFIER:
+            print_indent(indent);
+            printf("Id: %s\n", node->value.id);
+            break;
     }
 }

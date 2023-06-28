@@ -9,8 +9,6 @@ lbs * newlbl() {
 }
 
 void install(char *sym_name) {
-    printf("%s\n\n\n", sym_name);
-    printf("entrei\n\n\n");
     symrec *s;
     s = getsym(sym_name);
     

@@ -53,9 +53,9 @@ extern int yylineno;
 
 program:        LET 
                     declarations
-                IN                                              {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2;}
+                IN                                              
                     commands
-                END                                             {$$ = root;}
+                END                                             {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2; root->right = $4; $$ = root;}
                 ;
 
 declarations:   /* empty */                                     {$$ = NULL;}
