@@ -55,7 +55,7 @@ program:        LET
                     declarations
                 IN                                              {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2;}
                     commands
-                END                                             {$$ = root;}
+                END                                             {root->right = $4; $$ = root;}
                 ;
 
 declarations:   /* empty */                                     {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {});}
@@ -67,23 +67,23 @@ id_seq:         /* empty */                                     {$$ = NULL;}
                 ;
 
 commands:       /* empty */                                     {$$ = NULL;}
-                | commands command ';'                          {$$ = NULL;}                              
+                | commands command ';'                          {$$ = create_node(AST_COMMANDS, (UnionTypes) {}); $$->left = $1; $$->right = $2;}                              
                 ;
 
-command:        SKIP                                            {$$ = NULL;}
+command:        SKIP                                            {$$ = create_node(AST_SKIP, (UnionTypes) {});}
                 | READ IDENTIFIER                               {$$ = context_check(AST_READ, $2);}
-                | WRITE exp                                     {$$ = context_check(AST_WRITE, $2);}
+                | WRITE exp                                     {$$ = create_node(AST_WRITE, (UnionTypes) { .exp = $2 });}
                 | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1);}
-                | IF exp                                        {$$ = create_node(AST_IF, (UnionTypes) { .exp = $2 }); $$->left=$1; $$->right=$3;}
-                    THEN commands                               {$$ = NULL;}
-                  ELSE                                          {$$ = NULL;}
+                | IF exp                                        
+                    THEN commands                               
+                  ELSE                                          
                     commands
-                  FI                                            {$$ = NULL;}
-                | WHILE                                         {$$ = NULL;}
-                    exp                                         {$$ = NULL;}
+                  FI                                            {$$ = create_node(AST_IF, (UnionTypes) { .exp = $2 }); $$->left=$4; $$->right=$6;}
+                | WHILE                                         
+                    exp                                         
                   DO
                     commands
-                  END                                           {$$ = NULL;}
+                  END                                           {$$ = create_node(AST_WHILE, (UnionTypes) { .exp = $2 }); $$->left=$4;}
                 ;
 
 exp:            NUMBER                                          {$$ = create_node(AST_INTEGER, (UnionTypes) { .intval = $1 });}
