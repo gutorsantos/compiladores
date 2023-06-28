@@ -6,7 +6,6 @@
 
 typedef struct symrec{
     char *name;
-    int offset;
     struct symrec *next;
 } symrec;
 

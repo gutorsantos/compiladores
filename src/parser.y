@@ -51,7 +51,7 @@ declarations:   /* empty */                                     {}
                 ;
 
 id_seq:         /* empty */                                     {}
-                | id_seq IDENTIFIER ','                         {}
+                | id_seq IDENTIFIER ','                         {install($2);}
                 ;
 
 commands:       /* empty */                                     {}
@@ -59,9 +59,9 @@ commands:       /* empty */                                     {}
                 ;
 
 command:        SKIP                                            {}
-                | READ IDENTIFIER                               {}
+                | READ IDENTIFIER                               {$$ = context_check(AST_READ, $2);}
                 | WRITE exp                                     {}
-                | IDENTIFIER ASSGNOP exp                        {}
+                | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1);}
                 | IF exp                                        
                     THEN commands                               
                   ELSE                                          
@@ -75,7 +75,7 @@ command:        SKIP                                            {}
                 ;
 
 exp:            NUMBER                                          {}
-                | IDENTIFIER                                    {}
+                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1);}
                 | exp '<' exp                                   {}
                 | exp '=' exp                                   {}
                 | exp '>' exp                                   {}

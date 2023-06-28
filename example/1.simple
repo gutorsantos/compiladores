@@ -1,6 +1,0 @@
-let
-    integer x.
-in
-    x := 0;
-    write x;
-end
