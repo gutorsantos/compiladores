@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include "../symbol_table/symbol_table.h"
+#include "../codegen/ast.h"
 #include <stdio.h>
 
 extern FILE* yyin;
@@ -19,7 +20,7 @@ extern lbs *lbs_list;
 
 lbs* newlbl();
 void install(char* sym_name);
-void context_check(int operation, char* sym_name);
+ASTNode* context_check(int operation, char* sym_name);
 int yyparse();
 
 // static inline void clear_label_list(lbs* ptr);

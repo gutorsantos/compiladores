@@ -1,4 +1,5 @@
 #include "parser.h"
+#include "../codegen/ast.h"
 
 unsigned int errors;
 lbs *lbs_list = NULL;
@@ -19,7 +20,7 @@ void install(char *sym_name) {
     }
 }
 
-void context_check(int operation, char* sym_name) {
+ASTNode* context_check(int operation, char* sym_name) {
     symrec *identifier;
     identifier = getsym(sym_name);
 
@@ -27,6 +28,8 @@ void context_check(int operation, char* sym_name) {
         errors++;
         printf("%s nao esta declarado", sym_name);
     }
-    // else
-    //     gen_code(operation, identifier->offset);
+    else
+        return create_node(operation, (UnionTypes) { .id = sym_name });
+        // gen_code(operation, identifier->offset);
+    return NULL;
 }

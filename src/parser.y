@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../src/codegen/ast.h"
+#include "../src/parser/parser.h"
 
 #define YYDEBUG 1
 
@@ -12,82 +13,90 @@ extern int yylineno;
 %}
 
 %union semrec{
+    int intval;
+    float floatval;
+    char* stringval;
+    char* id;
     struct ASTNode* node;
-} 
+    char operation;
+}
 
-%start program
-%token <id> ASSGNOP
-%token DO
-%token ELSE
-%token END
 %token <id> IDENTIFIER
-%token <lbls> IF WHILE
-%token IN 
-%token LET 
-%token INTEGER 
-%token FLOAT
 %token <intval> NUMBER
 %token <floatval> NUMBER_FLOAT
-%token <id> STRING
-%token READ 
-%token READ_FT
+%token <stringval> STRING
 %token SKIP
-%token THEN
+%token READ
 %token WRITE
-%token WRITE_FT
+%token LET
+%token IN
+%token END
+%token IF
+%token FI
+%token DO
+%token THEN
+%token ELSE
+%token WHILE
+%token INTEGER 
+%token <id> ASSGNOP
 
 %left '-' '+'
 %left '*' '/'
 %right '^'
 
+%type <node> program declarations id_seq commands command exp 
+%type <operation> '+' '-' '*' '/' '=' '>' '<' '^' 
+
+%start program
+
 %%
 
 program:        LET 
                     declarations
-                IN                                              {}
+                IN                                              {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2;}
                     commands
-                END                                             {}
+                END                                             {$$ = root;}
                 ;
 
-declarations:   /* empty */                                     {}
-                | INTEGER id_seq IDENTIFIER '.'                 {}
+declarations:   /* empty */                                     {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {});}
+                | INTEGER id_seq IDENTIFIER '.'                 {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {});}
                 ;
 
-id_seq:         /* empty */
-                | id_seq IDENTIFIER ','                         {}
+id_seq:         /* empty */                                     {$$ = NULL;}
+                | id_seq IDENTIFIER ','                         {install($2); $$ = create_node(AST_IDENTIFIER, (UnionTypes) { .id = $2 }); $$->left=$1;}
                 ;
 
-commands:       /* empty */
-                | commands command ';'                               
+commands:       /* empty */                                     {$$ = NULL;}
+                | commands command ';'                          {$$ = NULL;}                              
                 ;
 
-command:        SKIP
-                | READ IDENTIFIER                               {}
-                | WRITE exp                                     {}
-                | IDENTIFIER ASSGNOP exp                        {}
-                | IF exp                                        {}
-                    THEN commands                               {}
-                  ELSE                                          {}
+command:        SKIP                                            {$$ = NULL;}
+                | READ IDENTIFIER                               {$$ = context_check(AST_READ, $2);}
+                | WRITE exp                                     {$$ = context_check(AST_WRITE, $2);}
+                | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1);}
+                | IF exp                                        {$$ = create_node(AST_IF, (UnionTypes) { .exp = $2 }); $$->left=$1; $$->right=$3;}
+                    THEN commands                               {$$ = NULL;}
+                  ELSE                                          {$$ = NULL;}
                     commands
-                  END                                           {}
-                | WHILE                                         {}
-                    exp                                         {}
+                  FI                                            {$$ = NULL;}
+                | WHILE                                         {$$ = NULL;}
+                    exp                                         {$$ = NULL;}
                   DO
                     commands
-                  END                                           {}
+                  END                                           {$$ = NULL;}
                 ;
 
-exp:            NUMBER                                          {}
-                | IDENTIFIER                                    {}
-                | exp '<' exp                                   {}
-                | exp '=' exp                                   {}
-                | exp '>' exp                                   {}
-                | exp '+' exp                                   {}
-                | exp '-' exp                                   {}
-                | exp '*' exp                                   {}
-                | exp '/' exp                                   {}
-                | exp '^' exp                                   {}
-                | '(' exp ')'
+exp:            NUMBER                                          {$$ = create_node(AST_INTEGER, (UnionTypes) { .intval = $1 });}
+                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1);}
+                | exp '<' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '=' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '>' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '+' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '-' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '*' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '/' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | exp '^' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | '(' exp ')'                                   {$$ = $2;}
                 ;
 
 %%

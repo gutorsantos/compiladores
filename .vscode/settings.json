@@ -1,7 +1,9 @@
 {
     "files.associations": {
+        "*.asm": "asm-intel-x86-generic",
         "y.tab.h": "c",
         "lex.yy.h": "c",
-        "parser.h": "c"
+        "parser.h": "c",
+        "ast.h": "c"
     }
 }

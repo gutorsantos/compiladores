@@ -2,24 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef enum {
-    AST_PROGRAM,
-    AST_DECLARATIONS,
-    AST_COMMANDS,
-    AST_SKIP,
-    AST_READ,
-    AST_WRITE,
-    AST_ASSIGNMENT,
-    AST_IF,
-    AST_WHILE,
-    AST_EXPRESSION,
-    AST_INTEGER,
-    AST_FLOAT,
-    AST_IDENTIFIER,
-    AST_BINARY_OPERATION
-} ASTNodeType;
+ASTNode* root;
 
-ASTNode* create_node(int type, char* value) {
+ASTNode* create_node(int type, UnionTypes value) {
     ASTNode* node = NULL;
     node = (ASTNode*) malloc(sizeof(ASTNode));
     node->type = type;
@@ -27,11 +12,14 @@ ASTNode* create_node(int type, char* value) {
     node->right = NULL;
 
     if (type == AST_INTEGER) {
-        node->value.intval = atoi(value); // Preencher com o valor adequado
+        node->value.intval = value.intval; // Preencher com o valor adequado
     } else if (type == AST_FLOAT) {
-        node->value.floatval = atof(value); // Preencher com o valor adequado
-    } else {
-        node->value.id = (char*) value; // Preencher com o valor adequado
+        node->value.floatval = value.floatval; // Preencher com o valor adequado
+    } else if (type == AST_EXPRESSION) {
+        node->value.exp = value.exp; // Preencher com o valor adequado
+    }
+    else {
+        node->value.id = value.id; // Preencher com o valor adequado
     }
 
     return node;
@@ -77,49 +65,57 @@ void print_ast(ASTNode* node, int indent) {
     if (node == NULL)
         return;
 
-    // switch (node->type) {
-    //     case DECLARATION:
-    //         printf("Declaration: %s\n", node->value.id);
-    //         break;
-    //     case COMMAND:
-    //         printf("Commands:\n");
-    //         print_ast(node->left, indent + 1);
-    //         print_ast(node->right, indent + 1);
-    //         break;
-    //     case SKIP:
-    //         print_indent(indent);
-    //         printf("Skip\n");
-    //         break;
-    //     case READ:
-    //         print_indent(indent);
-    //         printf("Read: %s\n", node->value.id);
-    //         break;
-    //     case WRITE:
-    //         print_indent(indent);
-    //         printf("Write:\n");
-    //         print_ast(node->left, indent + 1);
-    //         break;
-    //     case ASSGNOP:
-    //         print_indent(indent);
-    //         printf("Assign: %s\n", node->left->value.id);
-    //         print_ast(node->right, indent + 1);
-    //         break;
-    //     case IF:
-    //         print_indent(indent);
-    //         printf("If:\n");
-    //         print_ast(node->left, indent + 1);
-    //         print_ast(node->right->left, indent + 1);
-    //         print_ast(node->right->right, indent + 1);
-    //         break;
-    //     case WHILE:
-    //         print_indent(indent);
-    //         printf("While:\n");
-    //         print_ast(node->left, indent + 1);
-    //         print_ast(node->right, indent + 1);
-    //         break;
-    //     case NUMBER:
-    //         print_indent(indent);
-    //         printf("Number: %d\n", node->value.intval);
-    //         break;
-    // }
+    switch (node->type) {
+        case AST_PROGRAM:
+            printf("Program: %s\n", node->value.id);
+            print_ast(node->left, indent + 1);
+            print_ast(node->right, indent + 1);
+            break;
+        case AST_DECLARATIONS:
+            printf("Declaration: %s\n", node->value.id);
+            print_indent(indent);
+            print_ast(node->left, indent + 1);
+            print_ast(node->right, indent + 1);
+            break;
+        case AST_COMMANDS:
+            printf("Commands:\n");
+            print_ast(node->left, indent + 1);
+            print_ast(node->right, indent + 1);
+            break;
+        case AST_SKIP:
+            print_indent(indent);
+            printf("Skip\n");
+            break;
+        case AST_READ:
+            print_indent(indent);
+            printf("Read: %s\n", node->value.id);
+            break;
+        case AST_WRITE:
+            print_indent(indent);
+            printf("Write:\n");
+            print_ast(node->left, indent + 1);
+            break;
+        case AST_ASSIGNMENT:
+            print_indent(indent);
+            printf("Assign: %s\n", node->left->value.id);
+            print_ast(node->right, indent + 1);
+            break;
+        case AST_IF:
+            print_indent(indent);
+            printf("If:\n");
+            print_ast(node->left, indent + 1);
+            print_ast(node->right->left, indent + 1);
+            print_ast(node->right->right, indent + 1);
+            break;
+        case AST_WHILE:
+            print_indent(indent);
+            printf("While:\n");
+            print_ast(node->left, indent + 1);
+            print_ast(node->right, indent + 1);
+            break;
+        case AST_INTEGER:
+            print_indent(indent);
+            printf("Number: %d\n", node->value.intval);
+            break;
+    }
 }

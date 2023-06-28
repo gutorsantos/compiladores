@@ -12,7 +12,7 @@ SIGN                                            [+-]
 
 ID                                              [a-zA-Z][a-zA-Z0-9_-]*
 NUMBER                                          {SIGN}?{DIGIT}+
-NUMBER_FLOAT                                    {SIGN}?{DIGIT}*[.]{DIGIT}*
+NUMBER_FLOAT                                    {SIGN}?{DIGIT}+[.]{DIGIT}*
 SPACE  		                                    [ \t\n]+
 STRING                                          \"[^\"]*\"
 
@@ -27,8 +27,8 @@ COMMENT_LINE       			                     (\/\/).*
 {SPACE}             ;
 {COMMENT_BLOCK}     ;
 {COMMENT_LINE}      ;
-{NUMBER}            { yylval.node = create_node(NUMBER, yytext); return NUMBER; }
-{NUMBER_FLOAT}      { yylval.node = create_node(NUMBER_FLOAT, yytext); return NUMBER_FLOAT; }
+{NUMBER}            { yylval.intval = atoi(yytext); return NUMBER; }
+{NUMBER_FLOAT}      { yylval.floatval = atof(yytext); return NUMBER_FLOAT; }
 ":="                { return ASSGNOP; }
 do                  { return DO; }
 else                { return ELSE; }
@@ -42,8 +42,8 @@ skip                { return SKIP; }
 then                { return THEN; }
 while               { return WHILE; }
 write               { return WRITE; }
-{ID}                { yylval.node = create_node(IDENTIFIER, (char *) strdup(yytext)); return IDENTIFIER; }
-{STRING}            { yylval.node = create_node(STRING, (char *) strdup(yytext)); return STRING; }
+{ID}                { yylval.id = (char *) strdup(yytext); return IDENTIFIER; }
+{STRING}            { yylval.stringval = (char *) strdup(yytext); return STRING; }
 .                   { return (yytext[0]); }
 %%
 
