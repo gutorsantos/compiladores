@@ -1,0 +1,18 @@
+let
+    integer a, b, c.
+in
+    // isso deveria ser ignorado
+    // a := 3;
+
+    // isso nao
+    b := 7;
+
+    /* isso tbm
+    a := 3;
+    b := 7;
+    */
+
+    // isso nao
+    a := 7;
+    
+end

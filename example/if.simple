@@ -1,0 +1,14 @@
+let
+    integer a, b, c.
+in
+    a := 3;
+    b := 7;
+
+    if a > b then
+        c := 1;
+    else
+        c := 0;
+    fi
+    
+    write c;
+end

@@ -1,0 +1,12 @@
+let
+    integer x, y.
+in
+    x := 10;
+    y := 0;
+
+    while x > 0 do
+        write x;
+        x := x - 1;
+    end
+
+end
