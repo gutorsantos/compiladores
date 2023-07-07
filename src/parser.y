@@ -58,12 +58,12 @@ program:        LET
                 END                                             {root = create_node(AST_PROGRAM, (UnionTypes) {}); root->left = $2; root->right = $4; $$ = root;}
                 ;
 
-declarations:   /* empty */                                     {$$ = NULL;}
-                | INTEGER id_seq IDENTIFIER '.'                 {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {}); install($3);}
+declarations:   INTEGER id_seq IDENTIFIER '.'                   {$$ = create_node(AST_DECLARATIONS, (UnionTypes) {}); install($3); $$->left = $2; $$->right = create_node(AST_IDENTIFIER, (UnionTypes) { .id = $3 });}
+                | declarations ',' IDENTIFIER                   {install($3); struct ASTNode* identifier = create_node(AST_IDENTIFIER, (UnionTypes) { .id = $3 }); identifier->left = $1; $$ = identifier;}
                 ;
 
 id_seq:         /* empty */                                     {$$ = NULL;}
-                | id_seq IDENTIFIER ','                         {install($2); $$ = create_node(AST_IDENTIFIER, (UnionTypes) { .id = $2 }); $$->left=$1;}
+                | id_seq IDENTIFIER ','                         {install($2); $$ = create_node(AST_IDENTIFIER, (UnionTypes) { .id = (char*) $2 }); $$->left=$1;}
                 ;
 
 commands:       /* empty */                                     {$$ = NULL;}
@@ -73,7 +73,7 @@ commands:       /* empty */                                     {$$ = NULL;}
 command:        SKIP                                            {$$ = create_node(AST_SKIP, (UnionTypes) {});}
                 | READ IDENTIFIER                               {$$ = context_check(AST_READ, $2);}
                 | WRITE exp                                     {$$ = create_node(AST_WRITE, (UnionTypes) { .exp = $2 });}
-                | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1);}
+                | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1); $$->left=create_node(AST_IDENTIFIER, (UnionTypes) { .id = $1 }); $$->right=$3;}
                 | IF exp                                        
                     THEN commands                               
                   ELSE                                          
@@ -87,15 +87,15 @@ command:        SKIP                                            {$$ = create_nod
                 ;
 
 exp:            NUMBER                                          {$$ = create_node(AST_INTEGER, (UnionTypes) { .intval = $1 });}
-                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1);}
-                | exp '<' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '=' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '>' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '+' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '-' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '*' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '/' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
-                | exp '^' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = $2 }); $$->left=$1; $$->right=$3;}
+                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1); $$->left=$1;}
+                | exp '<' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '<' }); $$->left=$1; $$->right=$3;}
+                | exp '=' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '=' }); $$->left=$1; $$->right=$3;}
+                | exp '>' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '>' }); $$->left=$1; $$->right=$3;}
+                | exp '+' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '+' }); $$->left=$1; $$->right=$3;}
+                | exp '-' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '-' }); $$->left=$1; $$->right=$3;}
+                | exp '*' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '*' }); $$->left=$1; $$->right=$3;}
+                | exp '/' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '/' }); $$->left=$1; $$->right=$3;}
+                | exp '^' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '^' }); $$->left=$1; $$->right=$3;}
                 | '(' exp ')'                                   {$$ = $2;}
                 ;
 
