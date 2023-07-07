@@ -67,20 +67,21 @@ void print_ast(ASTNode* node, int indent) {
 
     switch (node->type) {
         case AST_PROGRAM:
-            printf("Program: %s\n", node->value.id);
-            print_ast(node->left, indent + 1);
-            print_ast(node->right, indent + 1);
+            printf("Program:\n");
+            printf("Declarations:\n");
+            print_ast(node->left, indent+1);
+            printf("Commands:\n");
+            print_ast(node->right, indent+1);
             break;
         case AST_DECLARATIONS:
-            printf("Declaration: %s\n", node->value.id);
             print_indent(indent);
-            print_ast(node->left, indent + 1);
-            print_ast(node->right, indent + 1);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
             break;
         case AST_COMMANDS:
-            printf("Commands:\n");
-            print_ast(node->left, indent + 1);
-            print_ast(node->right, indent + 1);
+            print_indent(indent);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
             break;
         case AST_SKIP:
             print_indent(indent);
@@ -92,26 +93,27 @@ void print_ast(ASTNode* node, int indent) {
             break;
         case AST_WRITE:
             print_indent(indent);
-            printf("Write:\n");
-            print_ast(node->left, indent + 1);
+            printf("Write: %s\n", node->value.exp->value.id);
+            print_ast(node->left, indent);
             break;
         case AST_ASSIGNMENT:
             print_indent(indent);
-            printf("Assign: %s\n", node->left->value.id);
-            print_ast(node->right, indent + 1);
+            printf("Assign: ");
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
             break;
         case AST_IF:
             print_indent(indent);
             printf("If:\n");
-            print_ast(node->left, indent + 1);
-            print_ast(node->right->left, indent + 1);
-            print_ast(node->right->right, indent + 1);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
+            print_ast(node->right->right, indent);
             break;
         case AST_WHILE:
             print_indent(indent);
             printf("While:\n");
-            print_ast(node->left, indent + 1);
-            print_ast(node->right, indent + 1);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
             break;
         case AST_INTEGER:
             print_indent(indent);
@@ -120,6 +122,14 @@ void print_ast(ASTNode* node, int indent) {
         case AST_IDENTIFIER:
             print_indent(indent);
             printf("Id: %s\n", node->value.id);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
+            break;
+        case AST_BINARY_OPERATION:
+            print_indent(indent);
+            printf("Id: %c\n", node->value.operation);
+            print_ast(node->left, indent);
+            print_ast(node->right, indent);
             break;
     }
 }
