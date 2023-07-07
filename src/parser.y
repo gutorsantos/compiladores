@@ -87,7 +87,7 @@ command:        SKIP                                            {$$ = create_nod
                 ;
 
 exp:            NUMBER                                          {$$ = create_node(AST_INTEGER, (UnionTypes) { .intval = $1 });}
-                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1); $$->left=$1;}
+                | IDENTIFIER                                    {$$ = context_check(AST_IDENTIFIER, $1);}
                 | exp '<' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '<' }); $$->left=$1; $$->right=$3;}
                 | exp '=' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '=' }); $$->left=$1; $$->right=$3;}
                 | exp '>' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '>' }); $$->left=$1; $$->right=$3;}
