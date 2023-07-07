@@ -34,6 +34,7 @@ do                  { return DO; }
 else                { return ELSE; }
 end                 { return END; }
 if                  { return IF; }
+fi                  { return FI; }
 in                  { return IN; }
 integer             { return INTEGER; }
 let                 { return LET; }

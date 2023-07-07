@@ -42,6 +42,7 @@ extern int yylineno;
 
 %left '-' '+'
 %left '*' '/'
+%left '<' '>' '='
 %right '^'
 
 %type <node> program declarations id_seq commands command exp 

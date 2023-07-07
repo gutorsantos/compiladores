@@ -7,6 +7,7 @@ in
     while x > 0 do
         write x;
         x := x - 1;
-    end
+    end;
 
+    write x;
 end

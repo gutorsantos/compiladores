@@ -8,7 +8,7 @@ in
         c := 1;
     else
         c := 0;
-    fi
+    fi;
     
     write c;
 end
