@@ -13,15 +13,13 @@
     li a7 1
     mv a0 %reg
     ecall
+    li a7 11
+    li a0 '\n'
+    ecall
 .end_macro
 
 ##############################################
 #                    CODE                    #
 ##############################################
 .text 
-j main
-__exit:
-    li a7 10
-    ecall
-
 main:

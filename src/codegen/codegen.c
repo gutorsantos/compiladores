@@ -9,6 +9,7 @@ int codegen(ASTNode *node, FILE *out) {
 
     char* id;
     symrec* symbol;
+    int var, temp_a, temp_b;
 
     switch (node->type) {
         case AST_PROGRAM:
@@ -29,9 +30,39 @@ int codegen(ASTNode *node, FILE *out) {
             id = node->value.id;
             symbol = getsym(id);
             fprintf(stderr, "\x1b[94m[codegen]\x1b[0m assignment: %s\n", id);
-            int result = codegen(node->right, out); // expression
-            fprintf(out, "  lw t0 %d(s11)\n", result);
-            fprintf(out, "  sw t0 %d(s11)\n", symbol->offset);
+            temp_a = codegen(node->right, out); // expression
+            fprintf(out, "  # x := expr\n");
+            fprintf(out, "  lw t0 %d(s11)\n", temp_a);
+            fprintf(out, "  sw t0 %d(s11)\n\n", symbol->offset);
+            free_var(temp_a);
+            break;
+        case AST_INTEGER:
+            // NOTE: var is not freed
+            var = alloc_var();
+            fprintf(out, "  # integer: %d\n", node->value.intval);
+            fprintf(out, "  li t0 %d\n", node->value.intval);
+            fprintf(out, "  sw t0 %d(s11)\n\n", var);
+            return var;
+        case AST_BINARY_OPERATION:
+            // TODO: implement other binary operations
+            // NOTE: var is not freed
+            var = alloc_var();
+            temp_a = codegen(node->left, out); // left
+            temp_b = codegen(node->right, out); // right
+            fprintf(out, "  # expr := left op right\n");
+            fprintf(out, "  lw t0 %d(s11)\n", temp_a);
+            fprintf(out, "  lw t1 %d(s11)\n", temp_b);
+            fprintf(out, "  add t2 t0 t1 # +\n");
+            fprintf(out, "  sw t2 %d(s11)\n\n", var);
+            free_var(temp_a);
+            free_var(temp_b);
+            return var;
+        case AST_WRITE:
+            temp_a = codegen(node->left, out); // expression
+            fprintf(out, "  # write(expr)\n");
+            fprintf(out, "  lw t0 %d(s11)\n", temp_a);
+            fprintf(out, "  print_int(t0)\n\n");
+            free_var(temp_a);
             break;
         default:
             fprintf(stderr, "\x1b[94m[codegen]\x1b[0m node->type <%s> não é um tipo válido.\n", ASTNodeTypeNames[node->type]);
