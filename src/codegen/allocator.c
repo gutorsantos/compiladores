@@ -1,6 +1,6 @@
 #include "allocator.h"
 
-int var_count = 0;
+int var_len = 0;
 list* free_vars = NULL;
 
 int label_count = 0;
@@ -8,7 +8,9 @@ int label_count = 0;
 int alloc_var() {
     if (free_vars == NULL) {
         // no free variables, let's create a new one
-        return var_count++;
+        int var = var_len;
+        var_len += 4;
+        return var;
     }
 
     list* head = free_vars;

@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "../codegen/ast.h"
+#include "../codegen/allocator.h"
 
 unsigned int errors;
 lbs *lbs_list = NULL;
@@ -12,8 +13,10 @@ void install(char *sym_name) {
     symrec *s;
     s = getsym(sym_name);
     
-    if(s == 0)
+    if(s == 0) {
         s = putsym(sym_name);
+        s->offset = alloc_var();
+    }
     else {
         errors++;
         printf("%s ja esta definido\n", sym_name);

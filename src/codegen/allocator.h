@@ -9,7 +9,7 @@ typedef struct list {
     struct list *next;
 } list;
 
-extern int var_count;
+extern int var_len;
 extern list* free_vars;
 
 int alloc_var();

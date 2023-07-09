@@ -43,6 +43,23 @@ ASTNode* add_left_child(ASTNode* parent, ASTNode* child);
 ASTNode* add_right_child(ASTNode* parent, ASTNode* child);
 // ASTNode* add_child(ASTNode* parent, ASTNode* child);
 
-
 extern ASTNode* root;
+
+static const char* ASTNodeTypeNames[] = {
+    "AST_PROGRAM",
+    "AST_DECLARATIONS",
+    "AST_COMMANDS",
+    "AST_SKIP",
+    "AST_READ",
+    "AST_WRITE",
+    "AST_ASSIGNMENT",
+    "AST_IF",
+    "AST_WHILE",
+    "AST_EXPRESSION",
+    "AST_INTEGER",
+    "AST_FLOAT",
+    "AST_IDENTIFIER",
+    "AST_BINARY_OPERATION"
+};
+
 #endif
