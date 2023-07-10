@@ -26,7 +26,7 @@ int codegen(ASTNode *node, FILE *out) {
             codegen(node->left, out); // commands (list)
             codegen(node->right, out); // command
             break;
-        case AST_ASSIGNMENT:
+        case AST_ASSIGNMENT: // x = ?
             id = node->value.id;
             symbol = getsym(id);
             fprintf(stderr, "\x1b[94m[codegen]\x1b[0m assignment: %s\n", id);
@@ -36,14 +36,14 @@ int codegen(ASTNode *node, FILE *out) {
             fprintf(out, "  sw t0 %d(s11)\n\n", symbol->offset);
             free_var(temp_a);
             break;
-        case AST_INTEGER:
+        case AST_INTEGER: // 1234
             // NOTE: var is not freed
             var = alloc_var();
             fprintf(out, "  # integer: %d\n", node->value.intval);
             fprintf(out, "  li t0 %d\n", node->value.intval);
             fprintf(out, "  sw t0 %d(s11)\n\n", var);
             return var;
-        case AST_BINARY_OPERATION:
+        case AST_BINARY_OPERATION: // left op right
             // TODO: implement other binary operations
             // NOTE: var is not freed
             var = alloc_var();
