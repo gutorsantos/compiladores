@@ -50,8 +50,8 @@ int codegen(ASTNode *node, FILE *out) {
             return var;
         case AST_NOT: // not expr
             // NOTE: var is not freed
-            var = alloc_var();
             temp_a = codegen(node->left, out); // left
+            var = alloc_var();
             fprintf(out, "  # expr := not left\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
             fprintf(out, "  xori t0 t0 1\n");
@@ -60,9 +60,9 @@ int codegen(ASTNode *node, FILE *out) {
             return var;
         case AST_BINARY_OPERATION: // left op right
             // NOTE: var is not freed
-            var = alloc_var();
             temp_a = codegen(node->left, out); // left
             temp_b = codegen(node->right, out); // right
+            var = alloc_var();
             fprintf(out, "  # expr := left op right\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
             fprintf(out, "  lw t1 %d(s11)\n", temp_b);
@@ -84,11 +84,11 @@ int codegen(ASTNode *node, FILE *out) {
             done_label = label_count++;
             fprintf(out, "  # if expr then A else B\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
-            fprintf(out, "  beqz t0 L%d\n\n", else_label);
+            fprintf(out, "  beqz t0 L%d\n", else_label);
             free_var(temp_a);
             codegen(node->left, out); // THEN commands
-            fprintf(out, "  j L%d\n\n", done_label);
-            fprintf(out, "L%d:\n\n", else_label);
+            fprintf(out, "  j L%d\n", done_label);
+            fprintf(out, "L%d:\n", else_label);
             codegen(node->right, out); // ELSE commands
             fprintf(out, "L%d:\n\n", done_label);
             break;
@@ -96,10 +96,10 @@ int codegen(ASTNode *node, FILE *out) {
             block_label = label_count++;
             done_label = label_count++;
             fprintf(out, "  # while expr do A end\n");
-            fprintf(out, "L%d:\n\n", block_label);
+            fprintf(out, "L%d:\n", block_label);
             temp_a = codegen(node->value.exp, out); // expression
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
-            fprintf(out, "  beqz t0 L%d\n\n", done_label);
+            fprintf(out, "  beqz t0 L%d\n", done_label);
             free_var(temp_a);
             codegen(node->left, out); // commands
             fprintf(out, "  j L%d\n", block_label);

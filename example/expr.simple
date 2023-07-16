@@ -1,0 +1,9 @@
+let 
+    integer x, a, b.
+in
+    a := 10;
+    b := 20;
+
+    x := (a * (b + 10) / 2) + 5 * (3 + a*b);
+    write x;
+end
