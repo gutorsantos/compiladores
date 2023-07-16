@@ -49,28 +49,24 @@ int codegen(ASTNode *node, FILE *out) {
             fprintf(out, "  sw t0 %d(s11)\n\n", var);
             return var;
         case AST_NOT: // not expr
-            // NOTE: var is not freed
+            // NOTE: temp_a is not freed
             temp_a = codegen(node->left, out); // left
-            var = alloc_var();
             fprintf(out, "  # expr := not left\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
             fprintf(out, "  xori t0 t0 1\n");
-            fprintf(out, "  sw t0 %d(s11)\n\n", var);
-            free_var(temp_a);
-            return var;
+            fprintf(out, "  sw t0 %d(s11)\n\n", temp_a);
+            return temp_a;
         case AST_BINARY_OPERATION: // left op right
-            // NOTE: var is not freed
+            // NOTE: temp_a is not freed
             temp_a = codegen(node->left, out); // left
             temp_b = codegen(node->right, out); // right
-            var = alloc_var();
             fprintf(out, "  # expr := left op right\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
             fprintf(out, "  lw t1 %d(s11)\n", temp_b);
             gen_binary_op(out, node->value.operation);
-            fprintf(out, "  sw t2 %d(s11)\n\n", var);
-            free_var(temp_a);
+            fprintf(out, "  sw t2 %d(s11)\n\n", temp_a);
             free_var(temp_b);
-            return var;
+            return temp_a;
         case AST_READ:
             id = node->value.id;
             symbol = getsym(id);
