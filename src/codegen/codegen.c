@@ -108,7 +108,7 @@ int codegen(ASTNode *node, FILE *out) {
         case AST_SKIP:
             fprintf(out, "  # skip\n");
             break;
-        case AST_WRITE:            temp_a = codegen(node->value.exp, out); // expression
+        case AST_WRITE:
             temp_a = codegen(node->value.exp, out); // expression
             fprintf(out, "  # write(expr)\n");
             fprintf(out, "  lw t0 %d(s11)\n", temp_a);
