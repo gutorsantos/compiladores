@@ -3,19 +3,21 @@
 ## Para executar:
 
 ```bash
-make
+./build.sh
+./compiler example/fibonacci.simple
+fpgrars --no-video output.s
 ```
 
 ### Para limpar:
 
 ```bash
-make clean
+rm -r generated
 ```
 
 ### Os arquivos gerados podem ser verificados em:
 
 ```bash
-./build/compiler examples/1.simple
+./compiler examples/1.simple
 ```
 
 ### Tradução para RISC V
