@@ -1,10 +1,6 @@
 #include "codegen.h"
 #include <stdio.h>
 
-static void unimplemented(ASTNodeType type) {
-    fprintf(stderr, "\x1b[91munimplemented\x1b[0m %s\n", ASTNodeTypeNames[type]);
-}
-
 int codegen(ASTNode *node, FILE *out) {
     if (!node) {
         return 0;
