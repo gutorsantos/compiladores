@@ -1,0 +1,25 @@
+let 
+    integer a, b, t, n.
+in
+    read n;
+
+    a := 1;
+    b := 0;
+    
+    if n < 0 then
+        write -1;
+    else
+        skip;
+    fi;
+
+    while n > 0 do 
+        // a, b := a+b, a;
+        t := a;
+        a := a + b;
+        b := t;
+
+        write a;
+
+        n := n - 1;
+    end;
+end

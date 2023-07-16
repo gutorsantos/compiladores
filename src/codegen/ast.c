@@ -93,8 +93,8 @@ void print_ast(ASTNode* node, int indent) {
             break;
         case AST_WRITE:
             print_indent(indent);
-            printf("Write: %s\n", node->value.exp->value.id);
-            print_ast(node->left, indent);
+            printf("Write:\n");
+            print_ast(node->value.exp, indent+1);
             break;
         case AST_ASSIGNMENT:
             print_indent(indent);

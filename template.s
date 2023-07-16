@@ -23,3 +23,6 @@
 ##############################################
 .text 
 main:
+  # s11 é o ponteiro de variáveis e não deve ser alterado
+  la s11 variables
+

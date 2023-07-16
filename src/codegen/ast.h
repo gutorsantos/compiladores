@@ -15,7 +15,8 @@ typedef enum {
     AST_INTEGER,
     AST_FLOAT,
     AST_IDENTIFIER,
-    AST_BINARY_OPERATION
+    AST_BINARY_OPERATION,
+    AST_NOT
 } ASTNodeType;
 
 typedef union {

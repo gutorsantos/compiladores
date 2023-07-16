@@ -1,6 +1,7 @@
 let
     integer x, y.
 in
-    x := 0;
+    x := 10 + 2 * 3;
     write x;
+    skip;
 end

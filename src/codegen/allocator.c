@@ -3,6 +3,7 @@
 int var_len = 0;
 list* free_vars = NULL;
 
+// L0:, L1:, L2:, ...
 int label_count = 0;
 
 int alloc_var() {

@@ -42,11 +42,11 @@ extern int yylineno;
 
 %left '-' '+'
 %left '*' '/'
-%left '<' '>' '='
+%left '<' '>' '=' '!'
 %right '^'
 
 %type <node> program declarations id_seq commands command exp 
-%type <operation> '+' '-' '*' '/' '=' '>' '<' '^' 
+%type <operation> '+' '-' '*' '/' '=' '>' '<' '^' '!'
 
 %start program
 
@@ -71,7 +71,7 @@ commands:       /* empty */                                     {$$ = NULL;}
                 | commands command ';'                          {$$ = create_node(AST_COMMANDS, (UnionTypes) {}); $$->left = $1; $$->right = $2;}                              
                 ;
 
-command:        SKIP                                            {$$ = create_node(AST_SKIP, (UnionTypes) {});}
+command:        SKIP                                            {$$ = create_node(AST_SKIP, (UnionTypes) { .intval = 0 });}
                 | READ IDENTIFIER                               {$$ = context_check(AST_READ, $2);}
                 | WRITE exp                                     {$$ = create_node(AST_WRITE, (UnionTypes) { .exp = $2 });}
                 | IDENTIFIER ASSGNOP exp                        {$$ = context_check(AST_ASSIGNMENT, $1); $$->left=create_node(AST_IDENTIFIER, (UnionTypes) { .id = $1 }); $$->right=$3;}
@@ -97,6 +97,7 @@ exp:            NUMBER                                          {$$ = create_nod
                 | exp '*' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '*' }); $$->left=$1; $$->right=$3;}
                 | exp '/' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '/' }); $$->left=$1; $$->right=$3;}
                 | exp '^' exp                                   {$$ = create_node(AST_BINARY_OPERATION, (UnionTypes) { .operation = '^' }); $$->left=$1; $$->right=$3;}
+                | '!' exp                                       {$$ = create_node(AST_NOT, (UnionTypes) { .operation = '!' }); $$->left=$2;}
                 | '(' exp ')'                                   {$$ = $2;}
                 ;
 
