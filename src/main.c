@@ -1,3 +1,11 @@
+/** Projeto Final
+ *  Autores: Enzo Yoshio Niho, Gustavo Rodrigues dos Santos, João Pedro Sadéri da Silva, Leonardo Alves Riether
+ *  Matriculas: 19/0027304, 19/0014121, 17/0126021, 19/0032413
+ *  Materia: Compiladores - Turma 1
+ *  Ano: 2023 - 1o semestre 
+ *  Data: 19/07/2023
+ */
+
 #include <stdio.h>
 #include "../generated/lex.yy.h"
 #include "../generated/y.tab.h"
